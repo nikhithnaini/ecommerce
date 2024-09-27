@@ -9,7 +9,7 @@ function Register() {
   const { toast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, success } = useSelector((state) => state.form);
+  const { loading, error, success } = useSelector((state) => state.auth);
 
   const [formData, setData] = useState({
     username: "",

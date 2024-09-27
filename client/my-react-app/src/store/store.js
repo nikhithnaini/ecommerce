@@ -1,10 +1,10 @@
 // src/store.js
 import { configureStore } from "@reduxjs/toolkit";
-import formReducer from "../slices/index";
+import authReducer from "../slices/index";
 
 const store = configureStore({
   reducer: {
-    form: formReducer,
+    auth: authReducer,
   },
 });
 

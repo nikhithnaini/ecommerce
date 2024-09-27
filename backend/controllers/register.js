@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const registeruser = async (req, res) => {
   const { username, email, password } = req.body;
   try {
@@ -33,22 +34,43 @@ const registeruser = async (req, res) => {
 //login
 
 const loginuser = async (req, res) => {
-  const { username, password } = req.body;
-  const currentuser = await User.findOne({ username });
+  try {
+    const { email, password } = req.body;
+    const currentuser = await User.findOne({ email });
+    console.log(currentuser);
+    if (!currentuser) {
+      res.status(400).json({
+        status: "error",
+        message: "user didn't exist",
+      });
+    }
 
-  if (!currentuser) {
+    const checkpassword = await bcrypt.compare(password, currentuser.password);
+    if (!checkpassword) {
+      res.status(400).json({
+        status: "error",
+        message: "credentials do not match",
+      });
+
+      // Generate a 32-byte random secret key (can adjust size as needed)
+      const secretKey = crypto.randomBytes(32).toString("hex");
+      console.log("Generated Secret Key:", secretKey);
+      const token = jwt.sign(
+        { user: currentuser.username, email: currentuser.email },
+        secretKey,
+        { expiresIn: "60m" }
+      );
+    } else {
+      res.status(200).json({
+        status: "sucess",
+        message: "Logged in successfull",
+      });
+    }
+  } catch (err) {
     res.status(400).json({
       status: "error",
-      message: "user didn't exist",
+      message: "credentials not matched",
     });
-  }
-  const checkpassword = await bcrypt.compare(password, currentuser.password);
-  if (!checkpassword) {
-    res.status(400).json({
-      status: "error",
-      message: "credentials do not match",
-    });
-  } else {
   }
 };
-module.exports = registeruser;
+module.exports = { registeruser, loginuser };

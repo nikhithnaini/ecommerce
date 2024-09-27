@@ -2,23 +2,31 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginForm } from "@/slices";
 function Login() {
   const { toast } = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, success } = useSelector((state) => state.form);
+  const { loading, error, success } = useSelector((state) => state.auth);
 
   const [loginData, setLogin] = useState({
-    username: "",
     email: "",
     password: "",
   });
+  const changevalue = (e) => {
+    setLogin({
+      ...loginData,
+      [e.target.name]: e.target.value,
+    });
+    console.log(loginData);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("submitted");
-    const resultAction = await dispatch(submitForm(formData));
+    const resultAction = await dispatch(loginForm(loginData));
 
-    if (submitForm.fulfilled.match(resultAction)) {
+    if (loginForm.fulfilled.match(resultAction)) {
       // Handle success
 
       console.log("Form submitted successfully");
@@ -30,7 +38,7 @@ function Login() {
         isClosable: true, // Whether the toast can be dismissed by the user
         position: "top-right", // Position of the toast
       });
-      navigate("/login");
+      navigate("/home");
     } else {
       // Handle error
       console.log("Form submission failed");
@@ -42,16 +50,18 @@ function Login() {
         <p className="text-center text-2xl p-2">Login </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <label htmlFor="">Username</label>
+          <label htmlFor="">Email</label>
           <input
-            type="text"
-            name="username"
+            onChange={changevalue}
+            type="email"
+            name="email"
             required
             className="border-2 h-10 font-normal p-2"
           />
 
           <label htmlFor="">Password</label>
           <input
+            onChange={changevalue}
             type="password"
             name="password"
             id=""
