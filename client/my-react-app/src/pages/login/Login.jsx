@@ -31,8 +31,8 @@ function Login() {
 
       console.log("Form submitted successfully");
       toast({
-        title: "Account created.",
-        description: "We've created your account for you.",
+        title: "LoggedIn successfully.",
+        description: "We've logged in .",
         status: "success", // Types: "success", "error", "warning", "info"
         duration: 5000, // Time in milliseconds before auto-close
         isClosable: true, // Whether the toast can be dismissed by the user
