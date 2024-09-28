@@ -59,6 +59,16 @@ export const loginForm = createAsyncThunk(
     return response.data;
   }
 );
+export const checkauth = createAsyncThunk("auth/checkAuth", async () => {
+  const response = await axios.post("http://localhost:3000/api/check-auth", {
+    withCredentials: true,
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    },
+  });
+
+  return response.data;
+});
 const authslice = createSlice({
   name: "auth",
   initialState: {

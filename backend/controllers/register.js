@@ -73,4 +73,6 @@ const loginuser = async (req, res) => {
     });
   }
 };
+
+const authmiddleware = async (req, res, next) => {};
 module.exports = { registeruser, loginuser };
